@@ -1,41 +1,45 @@
 package test;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import test.Interface_Backend;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener; 
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-public class Insertion_UI extends JDialog {
-
+import javax.swing.*;
+public class searchUI extends JFrame {
+	JFrame f;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtName;
 	private JTextField txtDate;
 	private JTextField txtType;
 	private JTextField txtPath;
 	private int counter = 10 ;
-	private int index = 0;
-
-	public static void main(String args[]) {
-		try {
-			Insertion_UI dialog = new Insertion_UI();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					searchUI frame = new searchUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
-	
+
 	/**
-	 * Create the dialog.
+	 * Create the frame.
 	 */
-	public Insertion_UI() {
-		setBounds(100, 100, 450, 300);
+	public searchUI() {
+		setBounds(100, 100, 481, 334);
 		getContentPane().setLayout(null);
 		contentPanel.setBounds(0, 0, 220, 235);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -74,42 +78,44 @@ public class Insertion_UI extends JDialog {
 				panel4.add(label);
 			}
 		}
-		{
+		//start of button flow layout code
+		{ 
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBounds(0, 235, 450, 35);
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane);
 			{
-				
-				
-					JLabel lblStorageLeft = new JLabel("Storage Left - 10");
-					buttonPane.add(lblStorageLeft);
-				
-				
-				JButton okButton = new JButton("Save");
-				okButton.addActionListener(new ActionListener() {
+				JButton searchButton = new JButton("SEARCH");
+				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						
-						// Button Clicked
-						counter--;
-						lblStorageLeft.setText("Storage Left -"+ counter);
-						
 						// Inserting
-						Interface_Backend.insert(index, txtName.getText());
-						
-						
+						try {
+							String data = search_Backend.search(txtName.getText(), txtDate.getText(), txtType.getText(), txtPath.getText());
+							 
+							f=new JFrame();
+							if(data.contentEquals("null"))
+								{
+									data="NOT FOUND !!";
+									JOptionPane.showMessageDialog(f,data);
+								}
+							else
+							{
+								data="FOUND !!   "+data;
+								JOptionPane.showMessageDialog(f,data); 
+							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				});
-				
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+				searchButton.setActionCommand("Cancel");
+				buttonPane.add(searchButton);
 			}
 		}
+		
+		
+		
 		{
 			JPanel panel = new JPanel();
 			panel.setBounds(230, 0, 220, 235);
@@ -146,4 +152,5 @@ public class Insertion_UI extends JDialog {
 			txtPath.setColumns(10);
 		}
 	}
+
 }
